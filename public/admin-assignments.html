@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignments - HelpDesk Lite Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Assignments</h1>
+        <p>Assign and reassign support tickets</p>
+      </div>
+      <div class="cards-grid" id="assignment-stats"></div>
+      <div class="card">
+        <h2>Unassigned Tickets</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Submitted By</th><th>Priority</th><th>Status</th><th>Created</th><th>Assign</th>
+              </tr>
+            </thead>
+            <tbody id="unassigned-body"></tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="empty-state hidden">All tickets are assigned.</div>
+      </div>
+      <div class="card">
+        <h2>Assigned Tickets</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Assigned To</th><th>Priority</th><th>Status</th><th>Reassign</th>
+              </tr>
+            </thead>
+            <tbody id="assigned-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/admin-assignments.js"></script>
+  <script>initLayout('admin', 'admin-assignments');</script>
+</body>
+</html>

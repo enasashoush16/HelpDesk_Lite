@@ -1,0 +1,21 @@
+{
+  "name": "helpdesk-lite",
+  "version": "1.0.0",
+  "description": "Internal ticket management system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "init-db": "node database/init.js"
+  },
+  "keywords": ["helpdesk", "tickets"],
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "sql.js": "^1.12.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1"
+  }
+}

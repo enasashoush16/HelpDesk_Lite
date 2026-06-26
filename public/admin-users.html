@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users - HelpDesk Lite Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Users</h1>
+        <p>View registered users and support agents</p>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Registered</th>
+              </tr>
+            </thead>
+            <tbody id="users-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script>
+    initLayout('admin', 'admin-users');
+    document.addEventListener('layout-ready', async () => {
+      const { users } = await api('/api/users');
+      document.getElementById('users-body').innerHTML = users.map(u => `
+        <tr>
+          <td>${escapeHtml(u.first_name)} ${escapeHtml(u.last_name)}</td>
+          <td>${escapeHtml(u.email)}</td>
+          <td>${escapeHtml(u.phone)}</td>
+          <td><span class="badge badge-assigned">${escapeHtml(u.role)}</span></td>
+          <td>${formatDateShort(u.created_at)}</td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

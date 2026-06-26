@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tickets - HelpDesk Lite Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Ticket Management</h1>
+        <p>View and manage all tickets</p>
+      </div>
+      <div class="card">
+        <div id="filters"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Submitted By</th><th>Assigned To</th>
+                <th>Priority</th><th>Status</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body"></tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="empty-state hidden">No tickets found.</div>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    initLayout('admin', 'admin-tickets');
+    document.addEventListener('layout-ready', () => {
+      document.getElementById('stats-cards')?.remove();
+    });
+  </script>
+</body>
+</html>

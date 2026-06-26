@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-icon">HD</div>
+        <span style="font-weight:700;font-size:1.2rem">HelpDesk Lite</span>
+      </div>
+      <h1>Create account</h1>
+      <p class="subtitle">Register as an employee</p>
+      <form id="register-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" required minlength="2">
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" required minlength="2">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required minlength="8">
+        </div>
+        <div id="form-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block mt-16">Create Account</button>
+      </form>
+      <p class="auth-footer">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('form-error');
+      errEl.classList.add('hidden');
+      try {
+        const data = await api('/api/auth/register', {
+          method: 'POST',
+          body: {
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            password: document.getElementById('password').value,
+          },
+        });
+        window.location.href = data.redirect;
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+
+</html>

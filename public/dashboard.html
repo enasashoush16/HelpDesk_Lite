@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Overview of your support tickets</p>
+      </div>
+      <div class="cards-grid" id="stats-cards"></div>
+      <div class="card">
+        <h2>Recent Tickets</h2>
+        <div id="filters"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Category</th><th>Priority</th>
+                <th>Status</th><th>Assigned To</th><th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body"></tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="empty-state hidden">No tickets found.</div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/employee-dashboard.js"></script>
+  <script>initLayout('employee', 'dashboard');</script>
+</body>
+</html>

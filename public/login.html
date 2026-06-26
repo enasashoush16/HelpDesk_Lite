@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-icon">HD</div>
+        <span style="font-weight:700;font-size:1.2rem">HelpDesk Lite</span>
+      </div>
+      <h1>Welcome back</h1>
+      <p class="subtitle">Sign in to your account</p>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+        <div id="form-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block mt-16">Sign In</button>
+      </form>
+      <p class="auth-footer">Don't have an account? <a href="/register">Register</a></p>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script>
+    getCurrentUser().then(user => {
+      if (!user) return;
+      const redirects = { employee: '/dashboard', admin: '/admin', manager: '/manager' };
+      window.location.href = redirects[user.role] || '/dashboard';
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('form-error');
+      errEl.classList.add('hidden');
+      try {
+        const data = await api('/api/auth/login', {
+          method: 'POST',
+          body: {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          },
+        });
+        window.location.href = data.redirect;
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

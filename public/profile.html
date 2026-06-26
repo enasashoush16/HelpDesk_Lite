@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Profile</h1>
+        <p>Your account information</p>
+      </div>
+      <div class="card" style="max-width:480px">
+        <div class="detail-meta" id="profile-info"></div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script>
+    initLayout('employee', 'profile');
+    document.addEventListener('layout-ready', async ({ detail }) => {
+      const user = detail.user;
+      document.getElementById('profile-info').innerHTML = `
+        <div class="meta-item"><label>First Name</label><span>${escapeHtml(user.first_name)}</span></div>
+        <div class="meta-item"><label>Last Name</label><span>${escapeHtml(user.last_name)}</span></div>
+        <div class="meta-item"><label>Email</label><span>${escapeHtml(user.email)}</span></div>
+        <div class="meta-item"><label>Phone</label><span>${escapeHtml(user.phone)}</span></div>
+        <div class="meta-item"><label>Role</label><span>${escapeHtml(user.role)}</span></div>
+        <div class="meta-item"><label>Member Since</label><span>${formatDateShort(user.created_at)}</span></div>
+      `;
+    });
+  </script>
+</body>
+</html>

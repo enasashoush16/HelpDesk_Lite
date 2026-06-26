@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Ticket - HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Create Ticket</h1>
+        <p>Submit a new support request</p>
+      </div>
+      <div class="card" style="max-width:640px">
+        <form id="create-form">
+          <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" required>
+          </div>
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" required></select>
+          </div>
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea id="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Attachment</label>
+            <div class="attachment-placeholder">File uploads — coming in a future release</div>
+          </div>
+          <div id="form-error" class="form-error hidden"></div>
+          <div id="form-success" class="form-success hidden"></div>
+          <div class="actions-row">
+            <button type="submit" class="btn btn-primary">Submit Ticket</button>
+            <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script>
+    initLayout('employee', 'create-ticket');
+
+    document.addEventListener('layout-ready', async () => {
+      const { categories } = await api('/api/tickets/meta');
+      const select = document.getElementById('category');
+      categories.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        select.appendChild(opt);
+      });
+    });
+
+    document.getElementById('create-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('form-error');
+      const okEl = document.getElementById('form-success');
+      errEl.classList.add('hidden');
+      okEl.classList.add('hidden');
+      try {
+        const { ticket } = await api('/api/tickets', {
+          method: 'POST',
+          body: {
+            title: document.getElementById('title').value,
+            category: document.getElementById('category').value,
+            description: document.getElementById('description').value,
+          },
+        });
+        okEl.textContent = `Ticket #${ticket.id} created successfully!`;
+        okEl.classList.remove('hidden');
+        setTimeout(() => { window.location.href = `/ticket?id=${ticket.id}`; }, 1000);
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

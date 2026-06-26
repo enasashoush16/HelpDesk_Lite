@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - HelpDesk Lite Manager</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Analytics</h1>
+        <p>Workload and assignee insights</p>
+      </div>
+      <div class="charts-grid">
+        <div class="card">
+          <h2>Tickets by Assignee</h2>
+          <div class="chart-container"><canvas id="chart-assignee"></canvas></div>
+        </div>
+        <div class="card">
+          <h2>Tickets by Priority</h2>
+          <div class="chart-container"><canvas id="chart-priority"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Agent Workload</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th><th>Assigned Tickets</th><th>In Progress</th><th>Completed</th>
+              </tr>
+            </thead>
+            <tbody id="workload-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card overdue">
+        <h2>Overdue Tickets</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Status</th><th>Assigned To</th><th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="overdue-body"></tbody>
+          </table>
+        </div>
+        <div id="overdue-empty" class="empty-state hidden">No overdue tickets.</div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/manager.js"></script>
+  <script>
+    initLayout('manager', 'manager-analytics');
+    document.addEventListener('layout-ready', () => {
+      document.getElementById('kpi-cards')?.remove();
+      loadOverdueTickets();
+    });
+
+    async function loadOverdueTickets() {
+      const { tickets } = await api('/api/tickets?status=');
+      const overdue = tickets.filter(t => t.overdue && t.status !== 'Done');
+      const tbody = document.getElementById('overdue-body');
+      const empty = document.getElementById('overdue-empty');
+      if (!overdue.length) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      tbody.innerHTML = overdue.map(t => `
+        <tr>
+          <td><a class="ticket-link" href="/ticket?id=${t.id}">#${t.id}</a> ${overdueBadge(t)}</td>
+          <td>${escapeHtml(t.title)}</td>
+          <td>${statusBadge(t.status)}</td>
+          <td>${escapeHtml(t.assigned_to_name || 'Unassigned')}</td>
+          <td>${formatDateShort(t.created_at)}</td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

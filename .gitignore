@@ -1,0 +1,16 @@
+node_modules/
+.env
+database/helpdesk.db
+*.log
+# SQLite temporary/journal files (crucial since you use SQLite)
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE / Code Editor folders
+.vscode/
+.idea/

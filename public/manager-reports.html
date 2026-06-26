@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - HelpDesk Lite Manager</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Reports</h1>
+        <p>Ticket status and category breakdowns</p>
+      </div>
+      <div class="cards-grid" id="kpi-cards"></div>
+      <div class="charts-grid">
+        <div class="card">
+          <h2>Tickets by Status</h2>
+          <div class="chart-container"><canvas id="chart-status"></canvas></div>
+        </div>
+        <div class="card">
+          <h2>Tickets by Category</h2>
+          <div class="chart-container"><canvas id="chart-category"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>All Tickets</h2>
+        <div id="filters"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Category</th><th>Priority</th>
+                <th>Status</th><th>Assigned To</th><th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/charts.js"></script>
+  <script src="/js/manager.js"></script>
+  <script>
+    initLayout('manager', 'manager-reports');
+    document.addEventListener('layout-ready', () => {
+      document.getElementById('chart-assignee')?.closest('.card')?.remove();
+      document.querySelector('.card:last-of-type h2').textContent = 'All Tickets';
+      setupTicketTable();
+    });
+  </script>
+</body>
+</html>

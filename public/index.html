@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpDesk Lite</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <div class="landing">
+    <div class="brand" style="justify-content:center;margin-bottom:24px">
+      <div class="brand-icon">HD</div>
+      <span style="font-size:1.5rem;font-weight:700">HelpDesk Lite</span>
+    </div>
+    <h1>Internal Ticket Management</h1>
+    <p>Replace informal channels with a centralized ticketing workflow. Simple, lightweight, and focused on what
+      matters.</p>
+    <div class="landing-actions">
+      <a href="/login" class="btn btn-primary">Sign In</a>
+      <a href="/register" class="btn btn-secondary">Register</a>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script>
+    getCurrentUser().then(user => {
+      if (!user) return;
+      const redirects = { employee: '/dashboard', admin: '/admin', manager: '/manager' };
+      window.location.href = redirects[user.role] || '/dashboard';
+    });
+  </script>
+</body>
+
+</html>
