@@ -2,44 +2,17 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-// we comment out the DB_PATH constant to use a dynamic path based on the environment
 
-// const DB_PATH = path.join(__dirname, 'helpdesk.db');
-
-// we added this line to define a dynamic path for the database file based on the environment to depoly to vercel and use a temporary file in production
-const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
-const DB_PATH = isVercel
-  ? '/tmp/helpdesk.db'
-  : path.join(__dirname, 'helpdesk.db');
-
-console.log(`[Database Setup] Targeting runtime path: ${DB_PATH}`);
-//=======================
-
+const DB_PATH = path.join(__dirname, 'helpdesk.db');
 
 let SQL = null;
 let dbInstance = null;
 
-//we added the following function to safely save the database without crashing Vercel on failure
 function saveDatabase() {
   if (!dbInstance) return;
   const data = dbInstance.export();
-  
-  try {
-    fs.writeFileSync(DB_PATH, Buffer.from(data));
-  } catch (error) {
-    console.error(`CRITICAL: Failed writing database file to ${DB_PATH}. Error:`, error);
-  }
+  fs.writeFileSync(DB_PATH, Buffer.from(data));
 }
-
-// we comment out the saveDatabase function to prevent Vercel from crashing on database write failure
-
-// function saveDatabase() {
-//   if (!dbInstance) return;
-//   const data = dbInstance.export();
-//   fs.writeFileSync(DB_PATH, Buffer.from(data));
-// }
-
-
 
 function createStatement(sql) {
   return {
@@ -247,21 +220,6 @@ module.exports = {
   updateOverdueTickets,
 };
 
-// we comment out the following block to prevent Vercel from crashing on database initialization failure
-// if (require.main === module) {
-//   initDatabase().catch(console.error);
-// }
-
-// we add the following block to safely initialize the database without crashing Vercel on failure
-// Remove or change the old if condition block at the bottom to just this:
-module.exports = {
-  DB_PATH,
-  STATUSES,
-  PRIORITIES,
-  CATEGORIES,
-  initDatabase,
-  getDb,
-  enrichTicket,
-  TICKET_SELECT,
-  updateOverdueTickets,
-};
+if (require.main === module) {
+  initDatabase().catch(console.error);
+}

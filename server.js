@@ -65,36 +65,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-//we comment out the following block to prevent Vercel from crashing on database initialization failure
 
-// initDatabase().then(() => {
-//   app.listen(PORT, () => {
-//     console.log(`HelpDesk Lite running at http://localhost:${PORT}`);
-//   });
-// }).catch(err => {
-//   console.error('Failed to initialize database:', err);
-//   process.exit(1);
-// });
-
-
-//we add the following block to safely initialize the database without crashing Vercel on failure
-
-// Add the mandatory Vercel export
-module.exports = app;
-
-// Safely try to initialize the database without hard-crashing Vercel
-initDatabase()
-  .then(() => {
-    console.log('Database initialized successfully.');
-  })
-  .catch(err => {
-    console.error('Failed to initialize database safely, skipping for local read-only context:', err.message);
-    // REMOVED: process.exit(1) so Vercel keeps running!
-  });
-
-// Only listen locally, Vercel manages its own routing
-if (process.env.NODE_ENV !== 'production') {
+initDatabase().then(() => {
   app.listen(PORT, () => {
     console.log(`HelpDesk Lite running at http://localhost:${PORT}`);
   });
-}
+}).catch(err => {
+  console.error('Failed to initialize database:', err);
+  process.exit(1);
+});
