@@ -2,8 +2,15 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'helpdesk.db');
+// we comment out the DB_PATH constant to use a dynamic path based on the environment
 
+// const DB_PATH = path.join(__dirname, 'helpdesk.db');
+
+// we define a dynamic path for the database file based on the environment to depoly to vercel and use a temporary file in production
+const dbPath = process.env.NODE_ENV === 'production'
+  ? '/tmp/helpdesk.db'
+  : path.join(__dirname, 'helpdesk.db');
+//=======================
 let SQL = null;
 let dbInstance = null;
 
