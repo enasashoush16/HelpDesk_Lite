@@ -6,19 +6,40 @@ const path = require('path');
 
 // const DB_PATH = path.join(__dirname, 'helpdesk.db');
 
-// we define a dynamic path for the database file based on the environment to depoly to vercel and use a temporary file in production
-const DB_PATH = process.env.NODE_ENV === 'production'
+// we added this line to define a dynamic path for the database file based on the environment to depoly to vercel and use a temporary file in production
+const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
+const DB_PATH = isVercel
   ? '/tmp/helpdesk.db'
   : path.join(__dirname, 'helpdesk.db');
+
+console.log(`[Database Setup] Targeting runtime path: ${DB_PATH}`);
 //=======================
+
+
 let SQL = null;
 let dbInstance = null;
 
+//we added the following function to safely save the database without crashing Vercel on failure
 function saveDatabase() {
   if (!dbInstance) return;
   const data = dbInstance.export();
-  fs.writeFileSync(DB_PATH, Buffer.from(data));
+  
+  try {
+    fs.writeFileSync(DB_PATH, Buffer.from(data));
+  } catch (error) {
+    console.error(`CRITICAL: Failed writing database file to ${DB_PATH}. Error:`, error);
+  }
 }
+
+// we comment out the saveDatabase function to prevent Vercel from crashing on database write failure
+
+// function saveDatabase() {
+//   if (!dbInstance) return;
+//   const data = dbInstance.export();
+//   fs.writeFileSync(DB_PATH, Buffer.from(data));
+// }
+
+
 
 function createStatement(sql) {
   return {
