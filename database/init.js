@@ -7,7 +7,7 @@ const path = require('path');
 // const DB_PATH = path.join(__dirname, 'helpdesk.db');
 
 // we define a dynamic path for the database file based on the environment to depoly to vercel and use a temporary file in production
-const dbPath = process.env.NODE_ENV === 'production'
+const DB_PATH = process.env.NODE_ENV === 'production'
   ? '/tmp/helpdesk.db'
   : path.join(__dirname, 'helpdesk.db');
 //=======================
