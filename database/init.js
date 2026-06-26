@@ -226,6 +226,21 @@ module.exports = {
   updateOverdueTickets,
 };
 
-if (require.main === module) {
-  initDatabase().catch(console.error);
-}
+// we comment out the following block to prevent Vercel from crashing on database initialization failure
+// if (require.main === module) {
+//   initDatabase().catch(console.error);
+// }
+
+// we add the following block to safely initialize the database without crashing Vercel on failure
+// Remove or change the old if condition block at the bottom to just this:
+module.exports = {
+  DB_PATH,
+  STATUSES,
+  PRIORITIES,
+  CATEGORIES,
+  initDatabase,
+  getDb,
+  enrichTicket,
+  TICKET_SELECT,
+  updateOverdueTickets,
+};
